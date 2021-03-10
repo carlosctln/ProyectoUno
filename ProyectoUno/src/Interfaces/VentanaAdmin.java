@@ -1,6 +1,5 @@
 package Interfaces;
 
-import com.sun.imageio.plugins.jpeg.JPEG;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
@@ -9,9 +8,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-public class VentanaAdmin extends JFrame {
+public class VentanaAdmin extends JFrame implements ActionListener{
 
-    public static JPanel contenedor1;
     JMenuBar menuBar;
     JMenu menuOpciones;
     JScrollPane scrollPane;
@@ -19,6 +17,7 @@ public class VentanaAdmin extends JFrame {
     JLabel titulo;
     JTextArea textArea;
     JTable tablaProfesores;
+    JButton cerrarSesion;
     public static JPanel panelProfesores;
     public static JPanel panelCursos;
     public static JPanel panelEstudiantes;
@@ -28,11 +27,6 @@ public class VentanaAdmin extends JFrame {
         pestanas = new JTabbedPane();
         pestanas.setBounds(0, 0, 350, 450);
         pestanas.setVisible(true);
-
-        /*contenedor1 = new JPanel();
-        contenedor1.setBounds(0, 0, 600, 660);
-        contenedor1.setVisible(true);
-        contenedor1.setBackground(Color.blue);*/
 
         panelProfesores = new JPanel();
         panelProfesores.setBounds(0, 0, 600, 600);
@@ -54,13 +48,6 @@ public class VentanaAdmin extends JFrame {
         panelEstudiantes.setLayout(null);
         panelEstudiantes.setBackground(Color.black);
         pestanas.addTab("Estudiantes", panelEstudiantes);
-
-        /*ImageIcon fondoProf = new ImageIcon("images/fondoProfesores.jpg");
-        fondoProfe = new JLabel(fondoProf);
-        fondoProfe.setBounds(0, 0, 600, 600);
-        fondoProfe.setLayout(null);
-        fondoProfe.setVisible(true);
-        panelProfesores.add(fondoProfe);*/
         
         textArea = new JTextArea();
         textArea.setVisible(true);
@@ -78,26 +65,52 @@ public class VentanaAdmin extends JFrame {
         titulo.setFont(new Font("Andale Mono", 3, 18));
         panelProfesores.add(titulo);
         
+        cerrarSesion = new JButton("Cerrar sesión");
+        cerrarSesion.setBounds(760, 10, 120, 30);
+        cerrarSesion.setFont(new Font ("Andale Mono" , 1, 12));
+        cerrarSesion.setForeground(new Color(0, 0, 0));
+        cerrarSesion.addActionListener(this);
+        add(cerrarSesion);
+        panelProfesores.add(cerrarSesion);
 
     }//Fin del constructor
     
+    @Override
+    public void actionPerformed(ActionEvent e){
+        if(e.getSource() == cerrarSesion){
+            VentanaPrincipal VentanaPrin = new VentanaPrincipal();
+            VentanaPrincipal.VentanaPrin();
+            this.setVisible(false);
+        }
+    }// Fin del método para agregar eventos a los botones
+    
+    // clase para crear una tabla
     class TablaProfesores extends AbstractTableModel{
 
+        //aca se definen las filas
         @Override
         public int getRowCount() {
             return 50;
         }
 
+        //aca se definen las columnas
         @Override
         public int getColumnCount() {
+            String codigo = "Código"; 
             return 5;
         }
 
+        // este metodo recibe obejtos como para metros y se usa para llenar la tabla
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
             return null;
         }
     }// fin de la clase para crear la tabla
+    
+    public String getColumnName(int columna){
+        return "Código" + columna;
+        
+    }// fin del método para renombrar las columnas
 
     public static void VentAdmin() {
 

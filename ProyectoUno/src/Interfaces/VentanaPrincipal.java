@@ -106,6 +106,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener{
             
             if(!"admin".equals(Usuario) || !"admin".equals(Contrasenia)){
                 JOptionPane.showMessageDialog(null,"Usuario o contarseña incorrectos.");
+                usuarioT.setText("");
+                contraseniaT.setText("");
             }else{
                 
                 VentanaAdmin.VentAdmin();
