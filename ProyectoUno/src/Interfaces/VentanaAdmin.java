@@ -1,15 +1,24 @@
 package Interfaces;
 
+import Logica.LeerJsonProfesores;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 public class VentanaAdmin extends JFrame implements ActionListener{
 
+    LeerJsonProfesores llamarProfesores = new LeerJsonProfesores();
     JMenuBar menuBar;
     JMenu menuOpciones;
     JScrollPane scrollPane;
@@ -18,12 +27,29 @@ public class VentanaAdmin extends JFrame implements ActionListener{
     JTextArea textArea;
     JTable tablaProfesores;
     JButton cerrarSesion;
+    JButton crear;
+    JButton cargaMasiva;
+    JButton actualizar;
+    JButton eliminar;
+    JButton exportarPDF;
+    
     public static JPanel panelProfesores;
     public static JPanel panelCursos;
     public static JPanel panelEstudiantes;
     public static JTabbedPane pestanas;
-
+    public static String[] columnas;
+    public static String[][] matriz;
+    
     public VentanaAdmin() {
+        
+        columnas = new String[5];
+        matriz = new String[50][5];
+        columnas[0] = "Código";
+        columnas[1] = "Nombre";
+        columnas[2] = "Apellido";
+        columnas[3] = "Correo";
+        columnas[4] = "Genero";
+        
         pestanas = new JTabbedPane();
         pestanas.setBounds(0, 0, 350, 450);
         pestanas.setVisible(true);
@@ -51,11 +77,14 @@ public class VentanaAdmin extends JFrame implements ActionListener{
         
         textArea = new JTextArea();
         textArea.setVisible(true);
-        TableModel tablaUno = new TablaProfesores();
-        JTable miTabla = new JTable(tablaUno);
-        scrollPane = new JScrollPane(miTabla);
+        textArea.setBounds(600, 190, 280, 340);
+        add(textArea);
+        panelProfesores.add(textArea);
+        JTable tablaProfesores = new JTable(matriz, columnas);
+        
+        scrollPane = new JScrollPane(tablaProfesores);
         scrollPane.setVisible(true);
-        scrollPane.setBounds(10, 50, 435, 480);
+        scrollPane.setBounds(10, 50,580, 480);
         add(scrollPane);
         panelProfesores.add(scrollPane);
 
@@ -72,45 +101,83 @@ public class VentanaAdmin extends JFrame implements ActionListener{
         cerrarSesion.addActionListener(this);
         add(cerrarSesion);
         panelProfesores.add(cerrarSesion);
-
+        
+        crear = new JButton("Crear");
+        crear.setBounds(600, 50, 120, 30);
+        crear.setFont(new Font ("Andale Mono" , 1, 12));
+        crear.setForeground(new Color(0, 0, 0));
+        crear.addActionListener(this);
+        add(crear);
+        panelProfesores.add(crear);
+        
+        cargaMasiva = new JButton("Carga Masiva");
+        cargaMasiva.setBounds(740, 50, 120, 30);
+        cargaMasiva.setFont(new Font ("Andale Mono" , 1, 12));
+        cargaMasiva.setForeground(new Color(0, 0, 0));
+        cargaMasiva.addActionListener(this);
+        add(cargaMasiva);
+        panelProfesores.add(cargaMasiva);
+        
+        actualizar = new JButton("Actualizar");
+        actualizar.setBounds(600, 100, 120, 30);
+        actualizar.setFont(new Font ("Andale Mono" , 1, 12));
+        actualizar.setForeground(new Color(0, 0, 0));
+        actualizar.addActionListener(this);
+        add(actualizar);
+        panelProfesores.add(actualizar);
+        
+        eliminar = new JButton("Eliminar");
+        eliminar.setBounds(740, 100, 120, 30);
+        eliminar.setFont(new Font ("Andale Mono" , 1, 12));
+        eliminar.setForeground(new Color(0, 0, 0));
+        eliminar.addActionListener(this);
+        add(eliminar);
+        panelProfesores.add(eliminar);
+        
+        exportarPDF = new JButton("Exportar Listado a PDF");
+        exportarPDF.setBounds(600, 150, 260, 30);
+        exportarPDF.setFont(new Font ("Andale Mono" , 1, 12));
+        exportarPDF.setForeground(new Color(0, 0, 0));
+        exportarPDF.addActionListener(this);
+        add(exportarPDF);
+        panelProfesores.add(exportarPDF);
+        
     }//Fin del constructor
     
     @Override
     public void actionPerformed(ActionEvent e){
+        
+        //evento para el boton cerrar sesión
         if(e.getSource() == cerrarSesion){
             VentanaPrincipal VentanaPrin = new VentanaPrincipal();
             VentanaPrincipal.VentanaPrin();
             this.setVisible(false);
         }
-    }// Fin del método para agregar eventos a los botones
-    
-    // clase para crear una tabla
-    class TablaProfesores extends AbstractTableModel{
-
-        //aca se definen las filas
-        @Override
-        public int getRowCount() {
-            return 50;
-        }
-
-        //aca se definen las columnas
-        @Override
-        public int getColumnCount() {
-            String codigo = "Código"; 
-            return 5;
-        }
-
-        // este metodo recibe obejtos como para metros y se usa para llenar la tabla
-        @Override
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            return null;
-        }
-    }// fin de la clase para crear la tabla
-    
-    public String getColumnName(int columna){
-        return "Código" + columna;
+        //Fin del evento para el boton cerrar sesion
         
-    }// fin del método para renombrar las columnas
+        //asignar evento al boton crear
+        if(e.getSource() == crear){
+            //LeerJsonProfesores.CrearProfesores();
+        }
+        // fin del evento para el boton crea
+        
+        //asignar evento al boton carga masiva
+        if (e.getSource() == cargaMasiva) {
+            
+            String ruta;
+            ruta = JOptionPane.showInputDialog("Ingrese la ruta");
+            while("".equals(ruta)){
+                ruta = JOptionPane.showInputDialog("Ingrese la ruta");
+            }
+            try {
+                LeerJsonProfesores.CrearProfesores(ruta);
+            } catch (IOException ex) {
+                Logger.getLogger(VentanaAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        // fin del evento para el boton carga masiva
+        
+    }// Fin del método para agregar eventos a los botones
 
     public static void VentAdmin() {
 
